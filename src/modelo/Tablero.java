@@ -17,28 +17,33 @@ public class Tablero {
     }
 
     public void llenarTableroConValoresAleatorios() {
-        List<String> valores = generarValoresAleatorios();
+        List<Celda> parejas = generarParejasAleatorias();
         int index = 0;
 
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
-                celdas[fila][columna] = new Celda(valores.get(index));
+                celdas[fila][columna] = parejas.get(index);
                 index++;
             }
         }
     }
 
-    private List<String> generarValoresAleatorios() {
-        List<String> valores = new ArrayList<>();
+    private List<Celda> generarParejasAleatorias() {
+        List<Celda> parejas = new ArrayList<>();
         int cantidadParejas = (filas * columnas) / 2;
+        String[] nombresEnIngles = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"};
 
         for (int i = 1; i <= cantidadParejas; i++) {
-            valores.add(String.valueOf(i));
-            valores.add(String.valueOf(i));
+            String valor = String.valueOf(i);
+            String nombre = nombresEnIngles[i - 1];
+
+            // Crear celdas que contienen números o nombres directamente
+            parejas.add(new Celda(valor)); // Celda con número
+            parejas.add(new Celda(nombre)); // Celda con nombre en inglés
         }
 
-        Collections.shuffle(valores);
-        return valores;
+        Collections.shuffle(parejas); // Mezclar celdas para que se coloquen aleatoriamente
+        return parejas;
     }
 
     public boolean revelarCelda(int fila, int columna) {
@@ -52,7 +57,7 @@ public class Tablero {
         if (primeraSeleccionada == null) {
             primeraSeleccionada = celda;
         } else {
-            if (!primeraSeleccionada.esIgual(celda)) {
+            if (!primeraSeleccionada.esPareja(celda)) {
                 primeraSeleccionada.ocultar();
                 celda.ocultar();
             }
@@ -68,5 +73,17 @@ public class Tablero {
 
     public Celda getCelda(int fila, int columna) {
         return celdas[fila][columna];
+    }
+
+    public int quedanParejasPorEncontrar() {
+        int parejasRestantes = 0;
+        for (Celda[] fila : celdas) {
+            for (Celda celda : fila) {
+                if (!celda.estaRevelada() && !celda.estaDeshabilitada()) {
+                    parejasRestantes++;
+                }
+            }
+        }
+        return parejasRestantes / 2;
     }
 }

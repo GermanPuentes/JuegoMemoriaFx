@@ -1,6 +1,5 @@
 package modelo;
 
-
 public class ControladorMemoria {
     private Tablero tablero;
     private int jugadorActual;
@@ -18,17 +17,15 @@ public class ControladorMemoria {
         tablero.llenarTableroConValoresAleatorios();
     }
 
-    public void manejarClickCelda(int fila, int columna) {
-        if (tablero.revelarCelda(fila, columna)) {
-            if (tablero.esParejaEncontrada()) {
-                sumarPuntoAJugadorActual();
-            } else {
-                cambiarTurno();
-            }
-        }
+    public boolean manejarClickCelda(int fila, int columna) {
+        return tablero.revelarCelda(fila, columna);
     }
 
-    private void sumarPuntoAJugadorActual() {
+    public boolean esParejaEncontrada() {
+        return tablero.esParejaEncontrada();
+    }
+
+    public void sumarPuntoAJugadorActual() {
         if (jugadorActual == 1) {
             puntosJugadorUno++;
         } else {
@@ -36,7 +33,7 @@ public class ControladorMemoria {
         }
     }
 
-    private void cambiarTurno() {
+    public void cambiarTurno() {
         jugadorActual = (jugadorActual == 1) ? 2 : 1;
     }
 
@@ -54,5 +51,9 @@ public class ControladorMemoria {
 
     public int getPuntosJugadorDos() {
         return puntosJugadorDos;
+    }
+
+    public boolean terminoJuego() {
+        return tablero.quedanParejasPorEncontrar() == 0;
     }
 }
